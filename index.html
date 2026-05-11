@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Palette Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>🎨 Color Palette Generator</h1>
+    <p class="subtitle">Generate beautiful palettes & copy hex codes instantly</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <div class="control-group">
+        <label for="baseColor">Base Color</label>
+        <input type="color" id="baseColor" value="#6C63FF" />
+      </div>
+
+      <div class="control-group">
+        <label for="mode">Palette Mode</label>
+        <select id="mode">
+          <option value="analogous">Analogous</option>
+          <option value="complementary">Complementary</option>
+          <option value="triadic">Triadic</option>
+          <option value="split-complementary">Split-Complementary</option>
+          <option value="tetradic">Tetradic</option>
+          <option value="random">Random</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="count">Colors: <span id="countDisplay">5</span></label>
+        <input type="range" id="count" min="3" max="8" value="5" />
+      </div>
+
+      <button id="generateBtn" class="btn-generate">Generate Palette</button>
+    </section>
+
+    <section class="palette-container" id="paletteContainer">
+      <!-- Color swatches rendered here by JS -->
+    </section>
+
+    <div class="actions">
+      <button id="exportBtn" class="btn-secondary">Export as CSS</button>
+      <button id="copyAllBtn" class="btn-secondary">Copy All Hex</button>
+    </div>
+
+    <div id="exportModal" class="modal hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>CSS Variables</h2>
+          <button id="closeModal" class="btn-close">&times;</button>
+        </div>
+        <pre id="cssOutput"></pre>
+        <button id="copyCssBtn" class="btn-generate">Copy CSS</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+  </main>
+
+  <footer>
+    <p>Built with ❤️ — <a href="https://github.com/" target="_blank">View on GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
