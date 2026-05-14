@@ -3,69 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Color Palette Generator</title>
+  <title>Palette Studio</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header>
-    <h1>🎨 Color Palette Generator</h1>
-    <p class="subtitle">Generate beautiful palettes & copy hex codes instantly</p>
-  </header>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">◈</span>
+      <span class="brand-name">Palette Studio</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="generator">Generator</button>
+      <button class="tab-btn" data-tab="favorites">Favorites <span class="fav-count" id="favCount">0</span></button>
+    </div>
+  </nav>
 
-  <main>
-    <section class="controls">
-      <div class="control-group">
-        <label for="baseColor">Base Color</label>
-        <input type="color" id="baseColor" value="#6C63FF" />
-      </div>
-
-      <div class="control-group">
-        <label for="mode">Palette Mode</label>
-        <select id="mode">
-          <option value="analogous">Analogous</option>
-          <option value="complementary">Complementary</option>
-          <option value="triadic">Triadic</option>
-          <option value="split-complementary">Split-Complementary</option>
-          <option value="tetradic">Tetradic</option>
-          <option value="random">Random</option>
-        </select>
-      </div>
-
-      <div class="control-group">
-        <label for="count">Colors: <span id="countDisplay">5</span></label>
-        <input type="range" id="count" min="3" max="8" value="5" />
-      </div>
-
-      <button id="generateBtn" class="btn-generate">Generate Palette</button>
-    </section>
-
-    <section class="palette-container" id="paletteContainer">
-      <!-- Color swatches rendered here by JS -->
-    </section>
-
-    <div class="actions">
-      <button id="exportBtn" class="btn-secondary">Export as CSS</button>
-      <button id="copyAllBtn" class="btn-secondary">Copy All Hex</button>
+  <div class="tab-content active" id="generatorTab">
+    <div class="hero">
+      <h1>Create stunning<br><span class="gradient-text">color palettes</span></h1>
+      <p class="hero-sub">Generate, explore, and save beautiful color combinations</p>
     </div>
 
-    <div id="exportModal" class="modal hidden">
-      <div class="modal-box">
-        <div class="modal-header">
-          <h2>CSS Variables</h2>
-          <button id="closeModal" class="btn-close">&times;</button>
+    <div class="controls-card">
+      <div class="control-row">
+        <div class="control-item">
+          <label>Base Color</label>
+          <div class="color-input-wrap">
+            <input type="color" id="baseColor" value="#6C63FF" />
+            <span id="hexDisplay">#6C63FF</span>
+          </div>
         </div>
-        <pre id="cssOutput"></pre>
-        <button id="copyCssBtn" class="btn-generate">Copy CSS</button>
+
+        <div class="control-item control-wide">
+          <label>Harmony Mode</label>
+          <div class="mode-pills" id="modePills">
+            <button class="pill active" data-mode="analogous">Analogous</button>
+            <button class="pill" data-mode="complementary">Complementary</button>
+            <button class="pill" data-mode="triadic">Triadic</button>
+            <button class="pill" data-mode="split-complementary">Split</button>
+            <button class="pill" data-mode="tetradic">Tetradic</button>
+            <button class="pill" data-mode="random">Random</button>
+          </div>
+        </div>
+
+        <div class="control-item control-slim">
+          <label>Count: <strong id="countDisplay">5</strong></label>
+          <input type="range" id="count" min="3" max="8" value="5" />
+        </div>
+      </div>
+
+      <div class="control-actions">
+        <button id="generateBtn" class="btn-primary">↻ Generate</button>
+        <button id="saveBtn" class="btn-ghost">♡ Save</button>
+        <button id="exportBtn" class="btn-ghost">↗ Export CSS</button>
+        <button id="copyAllBtn" class="btn-ghost">⎘ Copy All</button>
       </div>
     </div>
 
-    <div id="toast" class="toast hidden"></div>
-  </main>
+    <div class="palette-wrap">
+      <div class="palette-container" id="paletteContainer"></div>
+    </div>
 
-  <footer>
-    <p>Built with ❤️ — <a href="https://github.com/" target="_blank">View on GitHub</a></p>
-  </footer>
+    <div class="color-details" id="colorDetails"></div>
+  </div>
+
+  <div class="tab-content" id="favoritesTab">
+    <div class="hero">
+      <h1>Your saved <span class="gradient-text">palettes</span></h1>
+      <p class="hero-sub">All your favorite color combinations in one place</p>
+    </div>
+    <div class="favorites-grid" id="favoritesGrid">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">◈</div>
+        <p>No saved palettes yet</p>
+        <span>Generate a palette and click Save to add it here</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>CSS Variables</h2>
+        <button id="closeModal" class="close-btn">✕</button>
+      </div>
+      <pre id="cssOutput"></pre>
+      <button id="copyCssBtn" class="btn-primary" style="width:100%">Copy CSS</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
 
   <script src="script.js"></script>
 </body>
