@@ -7,6 +7,8 @@ A beautiful, minimal web app for generating color palettes based on color theory
 - **5 Harmony Modes** — Analogous, Complementary, Triadic, Split-Complementary, Tetradic
 - **Random Mode** — generate a surprise palette with one click
 - **Adjustable count** — 3 to 8 colors per palette
+- **🖼️ Image Color Extraction** — drag & drop any image to extract dominant colors using k-means clustering
+- **💾 Save Favorites** — save palettes and access them anytime (stored in localStorage)
 - **Click to copy** — click any swatch to copy its hex code
 - **Copy all** — grab all hex codes at once
 - **Export as CSS** — generates ready-to-use CSS custom properties
