@@ -233,6 +233,130 @@ function showToast(msg) {
   toast._t = setTimeout(()=>toast.classList.add('hidden'), 2000);
 }
 
+// --- Image Color Extraction ---
+const dropZone = document.getElementById('dropZone');
+const imageInput = document.getElementById('imageInput');
+const browseBtn = document.getElementById('browseBtn');
+const previewImg = document.getElementById('previewImg');
+const dropContent = document.getElementById('dropContent');
+const extractActions = document.getElementById('extractActions');
+const extractBtn = document.getElementById('extractBtn');
+const clearImgBtn = document.getElementById('clearImgBtn');
+const extractCanvas = document.getElementById('extractCanvas');
+
+browseBtn.addEventListener('click', (e) => { e.stopPropagation(); imageInput.click(); });
+dropZone.addEventListener('click', () => { if(previewImg.classList.contains('hidden')) imageInput.click(); });
+
+imageInput.addEventListener('change', e => { if(e.target.files[0]) loadImage(e.target.files[0]); });
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) loadImage(file);
+});
+
+function loadImage(file) {
+  const url = URL.createObjectURL(file);
+  previewImg.src = url;
+  previewImg.classList.remove('hidden');
+  dropContent.style.display = 'none';
+  extractActions.classList.remove('hidden');
+}
+
+function clearImage() {
+  previewImg.src = '';
+  previewImg.classList.add('hidden');
+  dropContent.style.display = '';
+  extractActions.classList.add('hidden');
+  imageInput.value = '';
+}
+
+clearImgBtn.addEventListener('click', clearImage);
+
+extractBtn.addEventListener('click', () => {
+  const img = previewImg;
+  if(!img.src) return;
+
+  const canvas = extractCanvas;
+  const ctx = canvas.getContext('2d');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  ctx.drawImage(img, 0, 0);
+
+  const count = parseInt(countSlider.value);
+  const colors = extractDominantColors(ctx, canvas.width, canvas.height, count);
+  renderPalette(colors);
+  showToast(`Extracted ${colors.length} colors from image!`);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+function extractDominantColors(ctx, w, h, count) {
+  // Sample pixels evenly across the image
+  const pixels = [];
+  const step = Math.max(1, Math.floor(Math.sqrt((w * h) / 2000)));
+
+  for(let y = 0; y < h; y += step) {
+    for(let x = 0; x < w; x += step) {
+      const d = ctx.getImageData(x, y, 1, 1).data;
+      // Skip near-white, near-black, and transparent pixels
+      if(d[3] < 128) continue;
+      const brightness = (d[0] + d[1] + d[2]) / 3;
+      if(brightness < 20 || brightness > 240) continue;
+      pixels.push([d[0], d[1], d[2]]);
+    }
+  }
+
+  if(pixels.length === 0) {
+    showToast('Could not extract colors — try another image');
+    return currentPalette;
+  }
+
+  // Simple k-means clustering
+  const clusters = kMeans(pixels, count);
+  return clusters.map(c => rgbToHex(Math.round(c[0]), Math.round(c[1]), Math.round(c[2])));
+}
+
+function kMeans(pixels, k, iterations = 12) {
+  // Initialize centroids from random pixels
+  let centroids = [];
+  const used = new Set();
+  while(centroids.length < k) {
+    const idx = Math.floor(Math.random() * pixels.length);
+    if(!used.has(idx)) { used.add(idx); centroids.push([...pixels[idx]]); }
+  }
+
+  for(let iter = 0; iter < iterations; iter++) {
+    const clusters = Array.from({length: k}, () => []);
+
+    pixels.forEach(px => {
+      let minDist = Infinity, closest = 0;
+      centroids.forEach((c, i) => {
+        const dist = (px[0]-c[0])**2 + (px[1]-c[1])**2 + (px[2]-c[2])**2;
+        if(dist < minDist) { minDist = dist; closest = i; }
+      });
+      clusters[closest].push(px);
+    });
+
+    centroids = clusters.map((cl, i) => {
+      if(cl.length === 0) return centroids[i];
+      return [
+        cl.reduce((s,p)=>s+p[0],0)/cl.length,
+        cl.reduce((s,p)=>s+p[1],0)/cl.length,
+        cl.reduce((s,p)=>s+p[2],0)/cl.length
+      ];
+    });
+  }
+
+  return centroids;
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r,g,b].map(v => Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('');
+}
+
 // --- Init ---
 updateFavCount();
 renderFavorites();

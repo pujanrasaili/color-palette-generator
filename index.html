@@ -66,6 +66,28 @@
     </div>
 
     <div class="color-details" id="colorDetails"></div>
+
+    <!-- Image Extractor -->
+    <div class="section-divider">
+      <span>or extract from image</span>
+    </div>
+
+    <div class="image-extractor">
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="imageInput" accept="image/*" hidden />
+        <div class="drop-content" id="dropContent">
+          <div class="drop-icon">🖼️</div>
+          <p>Drop an image here</p>
+          <span>or <button class="browse-btn" id="browseBtn">browse files</button></span>
+        </div>
+        <img id="previewImg" class="preview-img hidden" alt="preview" />
+      </div>
+      <div class="extract-actions hidden" id="extractActions">
+        <button class="btn-primary" id="extractBtn">✦ Extract Colors</button>
+        <button class="btn-ghost" id="clearImgBtn">✕ Clear</button>
+      </div>
+      <canvas id="extractCanvas" hidden></canvas>
+    </div>
   </div>
 
   <div class="tab-content" id="favoritesTab">
