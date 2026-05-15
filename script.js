@@ -361,3 +361,27 @@ function rgbToHex(r, g, b) {
 updateFavCount();
 renderFavorites();
 generate();
+
+// --- Light / Dark Mode ---
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+
+function applyTheme(theme) {
+  if(theme === 'light') {
+    document.body.classList.add('light');
+    themeIcon.textContent = '☀️';
+  } else {
+    document.body.classList.remove('light');
+    themeIcon.textContent = '🌙';
+  }
+  localStorage.setItem('paletteTheme', theme);
+}
+
+themeToggle.addEventListener('click', () => {
+  const isLight = document.body.classList.contains('light');
+  applyTheme(isLight ? 'dark' : 'light');
+});
+
+// Load saved theme
+const savedTheme = localStorage.getItem('paletteTheme') || 'dark';
+applyTheme(savedTheme);

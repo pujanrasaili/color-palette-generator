@@ -612,3 +612,46 @@ pre {
   .palette-container { height: 180px; }
   .controls-card { margin: 0 1rem 1.5rem; }
 }
+
+/* ---- Light Mode ---- */
+body.light {
+  --bg: #f4f4fb;
+  --surface: #ffffff;
+  --surface2: #ebebf5;
+  --surface3: #ddddf0;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.15);
+  --text: #0f0f1a;
+  --text2: #4a4a6a;
+  --text3: #9090b0;
+}
+
+body.light .navbar {
+  background: rgba(244,244,251,0.9);
+}
+
+body.light pre {
+  color: #166534;
+  background: #f0fdf4;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-full);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--surface3);
+  transform: scale(1.08);
+}
